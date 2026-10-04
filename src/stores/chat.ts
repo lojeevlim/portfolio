@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { ChatMessage } from '@/types/chat'
-import { sendChatMessage } from '@/services/aiChat'
+import { ChatServiceError, sendChatMessage } from '@/services/aiChat'
 import { createWebSocketConnection, type WsStatus } from '@/config/websocket'
 
 const createId = () => crypto.randomUUID()
@@ -49,8 +49,8 @@ export const useChatStore = defineStore('chat', () => {
     try {
       const reply = await sendChatMessage(messages.value)
       messages.value.push({ id: createId(), role: 'assistant', text: reply, createdAt: now() })
-    } catch {
-      error.value = 'Failed to get a response. Please try again.'
+    } catch (err) {
+      error.value = err instanceof ChatServiceError ? err.message : 'Failed to get a response. Please try again.'
     } finally {
       isLoading.value = false
     }

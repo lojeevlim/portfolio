@@ -67,7 +67,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { Icon } from '@iconify/vue'
 import { vReveal } from '@/composables/vReveal'
-import { sendChatMessage } from '@/services/aiChat'
+import { ChatServiceError, sendChatMessage } from '@/services/aiChat'
 import type { ChatMessage } from '@/types/chat'
 import { visitorSocket, type VisitorPresencePayload, type VisitorWelcomePayload } from '@/config/socket'
 
@@ -587,8 +587,9 @@ If asked something unrelated to Lojee's work/background, gently redirect to what
     try {
       const reply = await sendChatMessage(history, BLOB_SYSTEM_PROMPT)
       questionContents.set(id, renderAskBlobCard(id, trimmed, reply, false))
-    } catch {
-      questionContents.set(id, renderAskBlobCard(id, trimmed, "Couldn't reach the AI service — try again in a moment.", true))
+    } catch (err) {
+      const message = err instanceof ChatServiceError ? err.message : "Couldn't reach the AI service — try again in a moment."
+      questionContents.set(id, renderAskBlobCard(id, trimmed, message, true))
     }
     patchCardContent(id)
   }
