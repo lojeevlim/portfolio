@@ -23,15 +23,19 @@
           <div class="photo-reveal" ref="photoRevealEl">
             <div class="photo-ground-shadow"></div>
             <img class="photo-layer photo-real" ref="photoRealEl" :src="photoReal" alt="Lojee Lim">
-            <img class="photo-layer photo-ghibli" ref="photoGhibliEl" :src="ghibliSrc" alt="Illustrated portrait of Lojee Lim">
+            <img class="photo-layer photo-ghibli" ref="photoGhibliEl" :src="ghibliOpenEyes" alt="Illustrated portrait of Lojee Lim">
             <div class="photo-reveal-glow" ref="revealGlowEl"></div>
           </div>
           <p class="hero-visual-caption"><span class="cursor-hint"></span>Move your cursor over the art to see the real me underneath</p>
-          <div class="floating-chip chip-1"><Icon icon="lucide:zap" width="14" /> Real-time</div>
-          <div class="floating-chip chip-2"><Icon icon="lucide:puzzle" width="14" /> Full-stack</div>
-          <div class="floating-chip chip-3"><Icon icon="lucide:code" width="14" /> Clean Code</div>
-          <div class="floating-chip chip-4"><Icon icon="lucide:rocket" width="14" /> Ship Fast</div>
-          <div class="floating-chip chip-5"><Icon icon="lucide:wrench" width="14" /> Problem Solver</div>
+          <img class="flow-card flow-1" :src="buildCard" alt="Build">
+          <img class="flow-card flow-2" :src="observeCard" alt="Observe">
+          <img class="flow-card flow-card-diamond flow-3" :src="goodCard" alt="Good?">
+          <img class="flow-card flow-4" :src="keepMonitoringCard" alt="Keep Monitoring">
+          <img class="flow-card flow-5" :src="investigateCard" alt="Investigate">
+          <img class="flow-card flow-6" :src="learnCard" alt="Learn">
+          <img class="flow-card flow-7" :src="improveCard" alt="Improve">
+          <img class="flow-card flow-8" :src="testCard" alt="Test">
+          <img class="flow-card flow-9" :src="repeatCard" alt="Repeat">
         </div>
       </div>
       <a href="#numbers" class="scroll-cue" aria-label="Scroll down"><span></span></a>
@@ -41,11 +45,19 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { Icon } from '@iconify/vue'
-import photoReal from '@/assets/photos/lojee_real.svg'
-import ghibliOpenEyes from '@/assets/photos/lojee_gl_open_eyes.svg'
-import ghibliHalfOpenEyes from '@/assets/photos/lojee_gl_half_open_eyes.svg'
-import ghibliClosedEyes from '@/assets/photos/lojee_gl_close_eyes.svg'
+import photoReal from '@/assets/photos/photo-real.svg'
+import ghibliOpenEyes from '@/assets/photos/photo-full-open.svg'
+import ghibliHalfOpenEyes from '@/assets/photos/photo-half-close.svg'
+import ghibliClosedEyes from '@/assets/photos/photo-full-close.svg'
+import buildCard from '@/assets/cards/build.svg'
+import observeCard from '@/assets/cards/observe.svg'
+import goodCard from '@/assets/cards/good.svg'
+import keepMonitoringCard from '@/assets/cards/keep_monitoring.svg'
+import investigateCard from '@/assets/cards/investigate.svg'
+import learnCard from '@/assets/cards/learn.svg'
+import improveCard from '@/assets/cards/improve.svg'
+import testCard from '@/assets/cards/test.svg'
+import repeatCard from '@/assets/cards/repeat.svg'
 
 const photoRevealEl = ref<HTMLElement | null>(null)
 const photoRealEl = ref<HTMLElement | null>(null)
@@ -100,7 +112,16 @@ onMounted(() => {
   // random blink on the Ghibli illustration by swapping between the three
   // hand-drawn eye-state frames — timed with a recursive setTimeout
   // (randomized delay each cycle) rather than a looping CSS animation, so it
-  // doesn't blink on a robotic fixed metronome
+  // doesn't blink on a robotic fixed metronome.
+  // These are large SVGs (600KB+, embedded raster art) — without preloading,
+  // the browser hasn't decoded the "closed" frame yet on first swap, so it
+  // never actually paints inside its brief on-screen window and the blink
+  // looks like it stops at half-closed. Preload all three up front instead.
+  ;[ghibliOpenEyes, ghibliHalfOpenEyes, ghibliClosedEyes].forEach((src) => {
+    const preload = new Image()
+    preload.src = src
+  })
+
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     let blinkTimeoutId: number
     const scheduleBlink = () => {
@@ -114,9 +135,9 @@ onMounted(() => {
             window.setTimeout(() => {
               ghibliEyeState.value = 'open'
               scheduleBlink()
-            }, 70)
-          }, 90)
-        }, 70)
+            }, 290)
+          }, 350)
+        }, 290)
       }, delay)
     }
     scheduleBlink()

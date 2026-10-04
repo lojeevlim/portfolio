@@ -1,8 +1,6 @@
 import { ref } from 'vue'
 
-const theme = ref<'light' | 'dark'>(
-  window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
-)
+const theme = ref<'light' | 'dark'>('light')
 
 const applyTheme = () => {
   document.documentElement.setAttribute('data-theme', theme.value)
