@@ -3,15 +3,15 @@
    not affect the AI chat console at /chat. */
 
 :root{
-  /* light, editorial theme — Ghibli forest green paired with black (not
-     amber/gold) as the secondary; black ink, white bg */
+  /* light, editorial theme — black & white (the Ghibli-cap green identity
+     lives only in the blob's own border here, everything else goes mono) */
   --bg: #faf9f6;
   --bg-2: #f0eee8;
-  --orb-a: #355e3b;   /* hunter green, ghibli cap family */
-  --orb-b: #121212;   /* black secondary */
-  --orb-a-rgb: 53,94,59;
-  --orb-b-rgb: 18,18,18;
-  --flare-bright: #d9ead9;
+  --orb-a: #1a1a1a;
+  --orb-b: #8a8a8a;
+  --orb-a-rgb: 26,26,26;
+  --orb-b-rgb: 138,138,138;
+  --flare-bright: #f0f0f0;
   --orb-text: #121212;
   --pulse-color: #000000;
   --bubble-fill-1: rgba(17,17,17,0.08);
@@ -26,10 +26,16 @@
   --card-grad-2: rgba(17,17,17,0.008);
   --ambient-1: rgba(var(--orb-a-rgb),0.08);
   --ambient-2: rgba(var(--orb-b-rgb),0.06);
-  --accent-text: #2f5233;
-  --tag-color: #24401f;
+  --accent-text: #1a1a1a;
+  --tag-color: #4d4d4d;
   --status-color: #22c55e;
   --ink-invert: #ffffff;
+  /* fixed, theme-independent — the blob border always keeps its Ghibli-cap
+     green identity, even while the rest of light mode goes black & white */
+  --blob-a: #355e3b;
+  --blob-b: #121212;
+  --blob-a-rgb: 53,94,59;
+  --blob-c: #d9ead9;
   color-scheme: light;
 }
 
@@ -59,6 +65,10 @@
   --tag-color: #d9ead9;
   --status-color: #22c55e;
   --ink-invert: #121212;
+  --blob-a: #7fa87f;
+  --blob-b: #2b2b2b;
+  --blob-a-rgb: 127,168,127;
+  --blob-c: #e8f5e9;
   color-scheme: dark;
 }
 
@@ -414,6 +424,7 @@ html:has(.portfolio-page) { scroll-behavior: smooth; overflow-x: hidden; }
 
 .photo-reveal {
   position: relative;
+  z-index: 2;
   width: min(100%, 360px);
   aspect-ratio: 534 / 900;
   cursor: none;
@@ -463,28 +474,24 @@ html:has(.portfolio-page) { scroll-behavior: smooth; overflow-x: hidden; }
   .photo-reveal-glow { display: none; }
 }
 
-.floating-chip {
+.flow-card {
   position: absolute;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 9px 16px;
-  border-radius: 46% 54% 60% 40% / 50% 40% 60% 50%;
-  background: linear-gradient(155deg, var(--bubble-fill-1), var(--bubble-fill-2)), var(--bg);
-  backdrop-filter: blur(6px);
-  border: 1px solid var(--glass-border-active);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.18), 0 0 18px rgba(var(--orb-a-rgb),0.22);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink);
   z-index: 4;
-  will-change: transform, border-radius;
+  width: 130px;
+  height: auto;
+  filter: drop-shadow(0 10px 24px rgba(0,0,0,0.16)) drop-shadow(0 0 14px rgba(var(--orb-a-rgb),0.18));
+  animation: chipFloat 4.5s ease-in-out infinite;
 }
-.chip-1 { top: 11%; right: -7%; animation: blobMorph1 8s ease-in-out infinite, chipFloat 4.5s ease-in-out infinite; }
-.chip-2 { bottom: 27%; left: 9%; animation: blobMorph2 8.5s ease-in-out infinite, chipFloat 4.5s ease-in-out infinite 1.4s; }
-.chip-3 { top: 4%; left: 25%; animation: blobMorph3 7.5s ease-in-out infinite, chipFloat 4.5s ease-in-out infinite 0.7s; }
-.chip-4 { bottom: 13%; right: -9%; animation: blobMorph4 9s ease-in-out infinite, chipFloat 4.5s ease-in-out infinite 2.1s; }
-.chip-5 { top: 42%; right: -8%; animation: blobMorph1 8.2s ease-in-out infinite reverse, chipFloat 4.5s ease-in-out infinite 2.8s; }
+.flow-card-diamond { width: 135px; }
+.flow-1 { top: -8%; left: 14%; animation-delay: 0s; }
+.flow-2 { top: 6%; right: -16%; animation-delay: 0.6s; }
+.flow-3 { top: 14%;; left: 8%; animation-delay: 1.2s; }
+.flow-4 { top: 42%; left: -19%; animation-delay: 1.8s; }
+.flow-5 { top: 42%; right: -17%; animation-delay: 2.4s; }
+.flow-6 { top: 58%; right: -19%; animation-delay: 3s; }
+.flow-7 { top: 72%; right: -15%; animation-delay: 3.6s; }
+.flow-8 { top: 86%; right: -19%; animation-delay: 4.2s; }
+.flow-9 { bottom: -10%; left: 32%; animation-delay: 4.8s; }
 @keyframes chipFloat {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
@@ -492,7 +499,7 @@ html:has(.portfolio-page) { scroll-behavior: smooth; overflow-x: hidden; }
 
 @media (max-width: 900px) {
   .hero-visual { min-height: 300px; margin-top: 20px; }
-  .floating-chip { display: none; }
+  .flow-card { display: none; }
 }
 
 /* ---------- Blob section (full-width band) ---------- */
@@ -799,11 +806,11 @@ html:has(.portfolio-page) { scroll-behavior: smooth; overflow-x: hidden; }
   inset: -5px;
   border-radius: 42% 58% 65% 35% / 45% 45% 55% 55%;
   padding: 5px;
-  background: conic-gradient(from 0deg, var(--orb-a), var(--orb-b), var(--flare-bright), var(--orb-a));
+  background: conic-gradient(from 0deg, var(--blob-a), var(--blob-b), var(--blob-c), var(--blob-a));
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-  filter: drop-shadow(0 0 12px rgba(var(--orb-a-rgb),0.9));
+  filter: drop-shadow(0 0 12px rgba(var(--blob-a-rgb),0.9));
   opacity: 0.95;
   pointer-events: none;
   transition: border-radius 0.6s ease;
