@@ -15,7 +15,7 @@ export const sendChatMessage = async (history: ChatMessage[], systemPrompt?: str
   ]
 
   try {
-    const response = await aiApiClient.post('/api/chat', {
+    const response = await aiApiClient.post('/api/chat/v1', {
       messages,
       model: DEFAULT_MODEL,
     })
